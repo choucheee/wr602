@@ -37,7 +37,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type ArgumentsType = list<mixed>|array<string, mixed>
  * @psalm-type CallType = array<string, ArgumentsType>|array{0:string, 1?:ArgumentsType, 2?:bool}|array{method:string, arguments?:ArgumentsType, returns_clone?:bool}
  * @psalm-type TagsType = list<string|array<string, array<string, mixed>>> // arrays inside the list must have only one element, with the tag name as the key
- * @psalm-type CallbackType = string|array{0:string|ReferenceConfigurator,1:string}|\Closure|ReferenceConfigurator|ExpressionConfigurator
+ * @psalm-type CallbackType = string|array{0:string|ReferenceConfigurator,1:string}|\Closure|ReferenceConfigurator
  * @psalm-type DeprecationType = array{package: string, version: string, message?: string}
  * @psalm-type DefaultsType = array{
  *     public?: bool,
@@ -264,7 +264,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         formats?: array<string, string|list<scalar|Param|null>>,
  *     },
  *     assets?: bool|array{ // Assets configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
  *         version_strategy?: scalar|Param|null, // Default: null
  *         version?: scalar|Param|null, // Default: null
@@ -352,7 +352,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  *     serializer?: bool|array{ // Serializer configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         enable_attributes?: bool|Param, // Default: true
  *         name_converter?: scalar|Param|null,
  *         circular_reference_handler?: scalar|Param|null,
@@ -415,7 +415,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         log_channel?: scalar|Param|null, // The channel of log message. Null to let Symfony decide. // Default: null
  *     }>,
  *     web_link?: bool|array{ // Web links configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *     },
  *     lock?: bool|string|array{ // Lock configuration
  *         enabled?: bool|Param, // Default: false
@@ -991,20 +991,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     intercept_redirects?: bool|Param, // Default: false
  *     excluded_ajax_paths?: scalar|Param|null, // Default: "^/((index|app(_[\\w]+)?)\\.php/)?_wdt"
  * }
- * @psalm-type StimulusConfig = array{
- *     controller_paths?: list<scalar|Param|null>,
- *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
- * }
- * @psalm-type TurboConfig = array{
- *     broadcast?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *         entity_template_prefixes?: list<scalar|Param|null>,
- *         doctrine_orm?: bool|array{ // Enable the Doctrine ORM integration
- *             enabled?: bool|Param, // Default: true
- *         },
- *     },
- *     default_transport?: scalar|Param|null, // Default: "default"
- * }
  * @psalm-type TwigExtraConfig = array{
  *     cache?: bool|array{
  *         enabled?: bool|Param, // Default: false
@@ -1375,6 +1361,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         bubble?: bool|Param, // Default: true
  *         interactive_only?: bool|Param, // Default: false
  *         app_name?: scalar|Param|null, // Default: null
+ *         fill_extra_context?: bool|Param, // Default: false
  *         include_stacktraces?: bool|Param, // Default: false
  *         process_psr_3_messages?: array{
  *             enabled?: bool|Param|null, // Default: null
@@ -1394,6 +1381,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         activation_strategy?: scalar|Param|null, // Default: null
  *         stop_buffering?: bool|Param, // Default: true
  *         passthru_level?: scalar|Param|null, // Default: null
+ *         excluded_404s?: list<scalar|Param|null>,
  *         excluded_http_codes?: list<array{ // Default: []
  *             code?: scalar|Param|null,
  *             urls?: list<scalar|Param|null>,
@@ -1407,6 +1395,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         url?: scalar|Param|null,
  *         exchange?: scalar|Param|null,
  *         exchange_name?: scalar|Param|null, // Default: "log"
+ *         room?: scalar|Param|null,
+ *         message_format?: scalar|Param|null, // Default: "text"
+ *         api_version?: scalar|Param|null, // Default: null
  *         channel?: scalar|Param|null, // Default: null
  *         bot_name?: scalar|Param|null, // Default: "Monolog"
  *         use_attachment?: scalar|Param|null, // Default: true
@@ -1415,6 +1406,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         icon_emoji?: scalar|Param|null, // Default: null
  *         webhook_url?: scalar|Param|null,
  *         exclude_fields?: list<scalar|Param|null>,
+ *         team?: scalar|Param|null,
+ *         notify?: scalar|Param|null, // Default: false
+ *         nickname?: scalar|Param|null, // Default: "Monolog"
  *         token?: scalar|Param|null,
  *         region?: scalar|Param|null,
  *         source?: scalar|Param|null,
@@ -1432,6 +1426,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         store?: scalar|Param|null, // Default: null
  *         connection_timeout?: scalar|Param|null,
  *         persistent?: bool|Param,
+ *         dsn?: scalar|Param|null,
+ *         hub_id?: scalar|Param|null, // Default: null
+ *         client_id?: scalar|Param|null, // Default: null
+ *         auto_log_stacks?: scalar|Param|null, // Default: false
+ *         release?: scalar|Param|null, // Default: null
+ *         environment?: scalar|Param|null, // Default: null
  *         message_type?: scalar|Param|null, // Default: 0
  *         parse_mode?: scalar|Param|null, // Default: null
  *         disable_webpage_preview?: bool|Param|null, // Default: null
@@ -1441,6 +1441,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         topic?: int|Param, // Default: null
  *         factor?: int|Param, // Default: 1
  *         tags?: list<scalar|Param|null>,
+ *         console_formater_options?: mixed, // Deprecated: "monolog.handlers..console_formater_options.console_formater_options" is deprecated, use "monolog.handlers..console_formater_options.console_formatter_options" instead.
  *         console_formatter_options?: mixed, // Default: []
  *         formatter?: scalar|Param|null,
  *         nested?: bool|Param, // Default: false
@@ -1450,6 +1451,15 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             port?: scalar|Param|null, // Default: 12201
  *             chunk_size?: scalar|Param|null, // Default: 1420
  *             encoder?: "json"|"compressed_json"|Param,
+ *         },
+ *         mongo?: string|array{
+ *             id?: scalar|Param|null,
+ *             host?: scalar|Param|null,
+ *             port?: scalar|Param|null, // Default: 27017
+ *             user?: scalar|Param|null,
+ *             pass?: scalar|Param|null,
+ *             database?: scalar|Param|null, // Default: "monolog"
+ *             collection?: scalar|Param|null, // Default: "logs"
  *         },
  *         mongodb?: string|array{
  *             id?: scalar|Param|null, // ID of a MongoDB\Client service
@@ -1493,6 +1503,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             id: scalar|Param|null,
  *             method?: scalar|Param|null, // Default: null
  *         },
+ *         lazy?: bool|Param, // Default: true
  *         verbosity_levels?: array{
  *             VERBOSITY_QUIET?: scalar|Param|null, // Default: "ERROR"
  *             VERBOSITY_NORMAL?: scalar|Param|null, // Default: "WARNING"
@@ -1519,8 +1530,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     doctrine?: DoctrineConfig,
  *     doctrine_migrations?: DoctrineMigrationsConfig,
  *     twig?: TwigConfig,
- *     stimulus?: StimulusConfig,
- *     turbo?: TurboConfig,
  *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
@@ -1534,8 +1543,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         debug?: DebugConfig,
  *         twig?: TwigConfig,
  *         web_profiler?: WebProfilerConfig,
- *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
@@ -1549,8 +1556,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         doctrine?: DoctrineConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,
  *         twig?: TwigConfig,
- *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
@@ -1564,8 +1569,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         doctrine_migrations?: DoctrineMigrationsConfig,
  *         twig?: TwigConfig,
  *         web_profiler?: WebProfilerConfig,
- *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
