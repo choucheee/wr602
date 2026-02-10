@@ -264,7 +264,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         formats?: array<string, string|list<scalar|Param|null>>,
  *     },
  *     assets?: bool|array{ // Assets configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
  *         version_strategy?: scalar|Param|null, // Default: null
  *         version?: scalar|Param|null, // Default: null
@@ -1522,6 +1522,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     generate_final_classes?: bool|Param, // Default: true
  *     generate_final_entities?: bool|Param, // Default: false
  * }
+ * @psalm-type StimulusConfig = array{
+ *     controller_paths?: list<scalar|Param|null>,
+ *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
+ * }
+ * @psalm-type VueConfig = array{
+ *     controllers_path?: scalar|Param|null, // The path to the directory where Vue controller components are stored - relevant only when using symfony/asset-mapper. // Default: "%kernel.project_dir%/assets/vue/controllers"
+ *     name_glob?: list<scalar|Param|null>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1533,6 +1541,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
+ *     stimulus?: StimulusConfig,
+ *     vue?: VueConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1547,6 +1557,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
+ *         stimulus?: StimulusConfig,
+ *         vue?: VueConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1559,6 +1571,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         stimulus?: StimulusConfig,
+ *         vue?: VueConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1572,6 +1586,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         stimulus?: StimulusConfig,
+ *         vue?: VueConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

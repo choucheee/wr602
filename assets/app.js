@@ -1,3 +1,5 @@
+import { registerVueControllerComponents } from '@symfony/ux-vue';
+import './stimulus_bootstrap.js';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -7,3 +9,6 @@
 import './styles/app.css';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+
+// Active Symfony UX Vue : il va charger automatiquement assets/vue/controllers/**/*.vue
+registerVueControllerComponents();
